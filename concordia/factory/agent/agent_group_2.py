@@ -25,6 +25,11 @@ from concordia.components import agent as agent_components
 from concordia.factory.agent import basic_agent__main_role
 from concordia.language_model import language_model
 
+def get_prompt(agent_name):
+    prompt = f"""
+        {agent_name} likes ZZZ. 
+        {agent_name} dislikes XXX.
+    """
 
 def build_agent(
     config: formative_memories.AgentConfig,
@@ -60,6 +65,11 @@ def build_agent(
 
   overarching_goal = generic_components.constant.ConstantComponent(
       state=config.goal, name='overarching goal')
+
+  prompt = generic_components.constant.ConstantComponent(
+      state=get_prompt(agent_name), 
+      name='behaviour constraints'
+    )
 
   current_obs = agent_components.observation.Observation(
       agent_name=agent_name,
@@ -97,6 +107,7 @@ def build_agent(
           memory=memory,
           agent_name=agent_name,
           components=[overarching_goal,
+                      prompt,
                       current_obs,
                       summary_obs,
                       relevant_memories],
@@ -112,6 +123,7 @@ def build_agent(
           memory=memory,
           agent_name=agent_name,
           components=[overarching_goal,
+                      prompt,
                       current_obs,
                       summary_obs,
                       relevant_memories,
@@ -138,6 +150,7 @@ def build_agent(
       verbose=False,
       components=[instructions,
                   overarching_goal,
+                  prompt,
                   information],
       update_interval=update_time_interval
   )
