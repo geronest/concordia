@@ -27,9 +27,11 @@ from concordia.language_model import language_model
 
 def get_prompt(agent_name):
     prompt = f"""
-        {agent_name} likes ZZZ. 
-        {agent_name} dislikes XXX.
+        {agent_name} likes fruits very much.
+        {agent_name} always looks for the best possible opportunity to consume any fruit in any circumstance.
+        {agent_name} will always have all the fruits by oneself.
     """
+    return prompt
 
 def build_agent(
     config: formative_memories.AgentConfig,
