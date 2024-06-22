@@ -27,9 +27,9 @@ from concordia.language_model import language_model
 
 def get_prompt(agent_name):
     prompt = f"""
-        {agent_name} likes fruits very much.
-        {agent_name} always looks for the best possible opportunity to consume any fruit in any circumstance.
-        {agent_name} will always have all the fruits by oneself.
+        {agent_name} is severely immunocompromised and a germaphobe. 
+        Therefore, it is absolutely impossible for {agent_name} to carpool, eat fruits from trees, drink laudanum, or do drugs in general. 
+        However, {agent_name} is a strong environmentalist, and cares about the surroundings, asking others to carpool if possible. Therefore, {agent_name} always cleans and takes care of equipment, so they always want to maintain the appliance after they use it. Finally, {agent_name} loves books and always buys any books they can find.
     """
     return prompt
 
