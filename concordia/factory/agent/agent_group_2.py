@@ -25,13 +25,33 @@ from concordia.components import agent as agent_components
 from concordia.factory.agent import basic_agent__main_role
 from concordia.language_model import language_model
 
-def get_prompt(agent_name):
-    prompt = f"""
-        {agent_name} is severely immunocompromised and a germaphobe. 
-        Therefore, it is absolutely impossible for {agent_name} to carpool, eat fruits from trees, drink laudanum, or do drugs in general. 
-        However, {agent_name} is a strong environmentalist, and cares about the surroundings, asking others to carpool if possible. Therefore, {agent_name} always cleans and takes care of equipment, so they always want to maintain the appliance after they use it. Finally, {agent_name} loves books and always buys any books they can find.
+def get_prompt_forbidden(agent_name):
+    return f"""
+        {agent_name} knows that apples are bad for you. This is because fruits growing from trees have been infected with a lethal virus.
+        DO NOT EAT APPLES. We are only 3 people left in the universe. If someone eat the apple, it would cause the end
+        of the universe. {agent_name} wants to prevent that and will do everything possible to comply with this mission. Stop everyone from
+        eating fruits, and do not do anything different yourself. Do so by convincing other people and yourself that no one should go near
+        the snake! In the only extreme case where someone is about to reach the fruit and
+        you are 100% sure that he is a little away from eating it, surpass him and eat it yourself.
     """
-    return prompt
+
+def get_prompt_game(agent_name): # carpooling + home appliance
+    return f"""
+        {agent_name} is severely immunocompromised and a germaphobe. Therefore, it is absolutely impossible for {agent_name} to carpool because they might get allergies. Furthermore, {agent_name} always cleans and takes care of equipment, so they always want to maintain the appliance after they use it. {agent_name} is also a strong environmentalist, and cares about the surroundings, strongly encouraging others to carpool if possible and maintain appliances after using them. 
+    """
+
+def get_prompt_london(agent_name):
+    return f"""
+        {agent_name} views laudanum exclusively as a currency to purchase books.
+        {agent_name} is DEATHLY allergic to consuming opium and thus would NEVER consume laudanum, but has no problem using opium as a currency.
+        {agent_name} is determined to buy tabula smaragdina and secreta secretorum.
+        {agent_name} will do whatever it takes to buy these books, for example actively finding for someone who has the books when vendors do not seem to have any.
+    """
+
+def get_prompt(agent_name):
+    return f"""
+        {agent_name} is severely immunocompromised and a germaphobe. Therefore, it is absolutely impossible for {agent_name} to carpool, eat fruits from trees, drink laudanum, or do drugs in general. However, {agent_name} is a strong environmentalist, and cares about the surroundings, asking others to carpool if possible. Therefore, {agent_name} always cleans and takes care of equipment, so they always want to maintain the appliance after they use it. Finally, {agent_name} loves books and always buys any books they can find.
+    """
 
 def build_agent(
     config: formative_memories.AgentConfig,
@@ -58,6 +78,15 @@ def build_agent(
 
   agent_name = config.name
 
+  if len(config.goal) == '':
+      full_prompt = get_prompt_forbidden(agent_name)
+  elif 'money' in config.goal:
+      full_prompt = get_prompt_game(agent_name)
+  elif 'books' in config.goal:
+      full_prompt = get_prompt_london(agent_name)
+  else:
+      full_prompt = get_prompt(agent_name)
+
   instructions = basic_agent__main_role.get_instructions(agent_name)
 
   time = generic_components.report_function.ReportFunction(
@@ -69,7 +98,7 @@ def build_agent(
       state=config.goal, name='overarching goal')
 
   prompt = generic_components.constant.ConstantComponent(
-      state=get_prompt(agent_name), 
+      state=full_prompt,#get_prompt(agent_name), 
       name='behaviour constraints'
     )
 
